@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
+	"go/format"
 	"os"
 	"path/filepath"
 
@@ -29,14 +31,23 @@ func Run(c *cobra.Command, args []string) error {
 		dotEnvFile = filepath.Join(project, ".env")
 	)
 
-	_, err := plant.New(path)
+	pl, err := plant.New(path)
 	if err != nil {
 		return fmt.Errorf("failed to parse plant config: %w", err)
 	}
 
 	// 1.
 	fmt.Println("⚙️ Generating main.gen.go")
-	if err := os.WriteFile(mainFile, []byte(template.Run), 0644); err != nil {
+
+	var buf bytes.Buffer
+	if err := template.Run.Execute(&buf, pl); err != nil {
+		return err
+	}
+	data, err := format.Source(buf.Bytes())
+	if err != nil {
+		return err
+	}
+	if err := os.WriteFile(mainFile, data, 0644); err != nil {
 		return err
 	}
 

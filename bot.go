@@ -11,7 +11,7 @@ type Bot struct {
 }
 
 func (p *Plant) Compose() (*Bot, error) {
-	lt, err := layout.New(p.conf.Plant.Bot.Config)
+	lt, err := layout.New(p.Bot.Config)
 	if err != nil {
 		return nil, err
 	}

@@ -8,11 +8,9 @@ import (
 )
 
 type Config struct {
-	Plant struct {
-		Bot struct {
-			Config string `yaml:"config"`
-		} `yaml:"bot"`
-	} `yaml:"plant"`
+	Bot struct {
+		Config string `yaml:"config"`
+	} `yaml:"bot"`
 
 	Deps   map[string]M `yaml:"deps"`
 	Joints []string     `yaml:"joints"`
@@ -20,7 +18,7 @@ type Config struct {
 }
 
 type Plant struct {
-	conf  Config
+	Config
 	parts map[string]Part
 }
 
@@ -38,18 +36,18 @@ func New(path string) (*Plant, error) {
 	}
 
 	return &Plant{
-		conf:  conf,
-		parts: make(map[string]Part),
+		Config: conf,
+		parts:  make(map[string]Part),
 	}, nil
 }
 
 func (p *Plant) Build(b *Bot) error {
-	if len(p.conf.Parts) == 0 {
+	if len(p.Parts) == 0 {
 		return errors.New("plant: no parts to build")
 	}
 
-	parts := make([]Part, 0, len(p.conf.Parts))
-	for _, name := range p.conf.Parts {
+	parts := make([]Part, 0, len(p.Parts))
+	for _, name := range p.Parts {
 		parts = append(parts, p.parts[name])
 	}
 
@@ -59,7 +57,7 @@ func (p *Plant) Build(b *Bot) error {
 		}
 	}
 
-	for _, joint := range p.conf.Joints {
+	for _, joint := range p.Joints {
 		b.Handle(joint, func(c tele.Context) error {
 			for _, part := range parts {
 				if h := part.Handler(joint); h != nil {

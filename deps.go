@@ -20,8 +20,8 @@ type Dep interface {
 var globalDeps = make(Deps)
 
 func (p *Plant) Connect() (Deps, error) {
-	deps := make(Deps, len(p.conf.Deps))
-	for name, conf := range p.conf.Deps {
+	deps := make(Deps, len(p.Deps))
+	for name, conf := range p.Deps {
 		dep, ok := globalDeps[name]
 		if !ok {
 			return nil, errors.New("plant: dependency not injected")
