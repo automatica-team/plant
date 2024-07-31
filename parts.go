@@ -6,7 +6,7 @@ import (
 
 type Part interface {
 	Name() string
-	Prepare() error
+	Import(M) error
 	Handler(string) tele.HandlerFunc
 }
 

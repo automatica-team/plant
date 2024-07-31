@@ -18,7 +18,7 @@ type DB struct {
 	*gorm.DB
 }
 
-func (d *DB) Connect(m plant.M) error {
+func (d *DB) Import(m plant.M) error {
 	db, err := gorm.Open(postgres.Open(m.Get("dsn")))
 	if err != nil {
 		return err

@@ -13,12 +13,14 @@ const (
 )
 
 func main() {
-	cmd.AddCommand(version)
-	cmd.AddCommand(run)
-
 	cmd.SilenceUsage = true
 	cmd.SilenceErrors = true
 	cmd.CompletionOptions.DisableDefaultCmd = true
+
+	cmd.AddCommand(version)
+	cmd.AddCommand(run)
+
+	run.Flags().String("replace", "", "replace directive for go.mod")
 
 	if err := cmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)

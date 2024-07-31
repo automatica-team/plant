@@ -11,15 +11,20 @@ func Cd(v string) {
 	dir = v
 }
 
-func Command(name string, arg ...string) error {
-	return command(false, name, arg...)
+func Exec(name string, arg ...string) error {
+	return command(false, name, arg...).Run()
 }
 
-func CommandSilent(name string, arg ...string) error {
-	return command(true, name, arg...)
+func ExecSilent(name string, arg ...string) error {
+	return command(true, name, arg...).Run()
 }
 
-func command(silent bool, name string, arg ...string) error {
+func Command(name string, arg ...string) (*exec.Cmd, error) {
+	cmd := command(false, name, arg...)
+	return cmd, cmd.Start()
+}
+
+func command(silent bool, name string, arg ...string) *exec.Cmd {
 	cmd := exec.Command(name, arg...)
 	cmd.Env = os.Environ()
 	cmd.Dir = dir
@@ -29,5 +34,5 @@ func command(silent bool, name string, arg ...string) error {
 		cmd.Stderr = os.Stderr
 	}
 
-	return cmd.Run()
+	return cmd
 }

@@ -17,14 +17,14 @@ import (
 import (
 	"automatica.team/plant"
 	{{- range .Parts }}
-	"automatica.team/{{ importpart . }}"
+	"automatica.team/{{ importpart .Name }}"
 	{{ end }}
 )
 
 // Import plant deps
 import (
-	{{- range $k, $v := .Deps }}
-	_ "automatica.team/{{ importdeps $k }}"
+	{{- range .Deps }}
+	_ "automatica.team/{{ importdeps .Name }}"
 	{{ end }}
 )
 
@@ -49,7 +49,7 @@ func main() {
 
 	// Add parts to the bot
 	{{- range .Parts }}
-	p.Add({{ partname . }}.New(b, d))
+	p.Add({{ partname .Name }}.New(b, d))
 	{{ end }}
 
 	// Build the bot

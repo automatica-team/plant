@@ -1,0 +1,12 @@
+bot:
+  file: "bot.yml"
+
+joints:
+  - /start
+
+deps:
+  - import: plant/db
+    dsn: $DB_URL
+
+parts:
+  - import: plant/core

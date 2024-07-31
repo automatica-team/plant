@@ -7,6 +7,7 @@ import (
 	"go/format"
 	"os"
 	"path/filepath"
+	"time"
 
 	"automatica.team/plant"
 	"automatica.team/plant/cmd/plant/exec"
@@ -28,6 +29,7 @@ func Run(c *cobra.Command, args []string) error {
 		path       = filepath.Join(project, "plant.yml")
 		mainFile   = filepath.Join(project, "main.gen.go")
 		goModFile  = filepath.Join(project, "go.mod")
+		goSumFile  = filepath.Join(project, "go.sum")
 		dotEnvFile = filepath.Join(project, ".env")
 	)
 
@@ -35,6 +37,12 @@ func Run(c *cobra.Command, args []string) error {
 	if err != nil {
 		return fmt.Errorf("failed to parse plant config: %w", err)
 	}
+
+	defer func() {
+		for _, path := range []string{mainFile, goModFile, goSumFile} {
+			os.Remove(path)
+		}
+	}()
 
 	// 1.
 	fmt.Println("⚙️ Generating main.gen.go")
@@ -54,17 +62,24 @@ func Run(c *cobra.Command, args []string) error {
 	// 2.
 	fmt.Println("📦 Generating go.mod file")
 	if _, err := os.Stat(goModFile); errors.Is(err, os.ErrNotExist) {
-		if err := exec.CommandSilent("go", "mod", "init", project); err != nil {
+		if err := exec.ExecSilent("go", "mod", "init", project); err != nil {
 			return err
 		}
-		if err := exec.CommandSilent("go", runGoModEditReplace...); err != nil {
+
+		replace, _ := c.Flags().GetString("replace")
+		if replace == "" {
+			replace = "github.com/automatica-team/plant@latest"
+		}
+
+		replace = "automatica.team/plant=" + replace
+		if err := exec.ExecSilent("go", "mod", "edit", "-replace", replace); err != nil {
 			return err
 		}
 	}
 
 	// 3.
 	fmt.Println("📥 Downloading Go modules")
-	if err := exec.Command("go", "mod", "tidy"); err != nil {
+	if err := exec.Exec("go", "mod", "tidy"); err != nil {
 		return err
 	}
 
@@ -76,14 +91,15 @@ func Run(c *cobra.Command, args []string) error {
 
 	// 4.
 	fmt.Println("🚀 Running the bot")
-	if err := exec.Command("go", "run", filepath.Base(mainFile)); err != nil {
+
+	cmd, err := exec.Command("go", "run", filepath.Base(mainFile))
+	if err != nil {
 		return err
 	}
 
-	return nil
-}
+	time.Sleep(time.Second)
+	fmt.Print("Press any key to exit...")
+	fmt.Scanln()
 
-var runGoModEditReplace = []string{
-	"mod", "edit", "-replace",
-	"automatica.team/plant=github.com/automatica-team/plant@latest",
+	return cmd.Process.Kill()
 }

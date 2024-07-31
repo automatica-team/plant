@@ -27,7 +27,7 @@ type Core struct {
 	db *db.DB
 }
 
-func (c *Core) Prepare() error {
+func (c *Core) Import(m plant.M) error {
 	lt := c.b.Layout
 
 	// Register middlewares
