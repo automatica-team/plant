@@ -13,15 +13,15 @@ import (
 	"log"
 )
 
-// Import plant parts
+// Import plant modules
 import (
 	"automatica.team/plant"
-	{{- range .Parts }}
-	"automatica.team/{{ importpart .Name }}"
+	{{- range .Mods }}
+	"automatica.team/{{ importmods .Name }}"
 	{{ end }}
 )
 
-// Import plant deps
+// Import plant dependencies
 import (
 	{{- range .Deps }}
 	_ "automatica.team/{{ importdeps .Name }}"
@@ -47,9 +47,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Add parts to the bot
-	{{- range .Parts }}
-	p.Add({{ partname .Name }}.New(b, d))
+	// Add modules to the bot
+	{{- range .Mods }}
+	p.Add({{ modname .Name }}.New(b, d))
 	{{ end }}
 
 	// Build the bot

@@ -1,12 +1,12 @@
 bot:
-  file: "bot.yml"
-
-joints:
-  - /start
+  token: $TOKEN
+  expose:
+    - /start
 
 deps:
   - import: plant/db
     dsn: $DB_URL
 
-parts:
+mods:
   - import: plant/core
+
