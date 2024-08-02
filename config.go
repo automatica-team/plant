@@ -15,8 +15,9 @@ type (
 	}
 
 	ConfigBot struct {
-		File   string   `yaml:"file"`
-		Expose []string `yaml:"expose"`
+		File   string    `yaml:"file"`
+		Token  EnvString `yaml:"token"`
+		Expose []string  `yaml:"expose"`
 	}
 )
 
@@ -47,10 +48,21 @@ func (m M) Get(name string) string {
 	}
 
 	if s, ok := v.(string); ok {
-		if s[0] == '$' {
-			return os.Getenv(s[1:])
-		}
+		return EnvString(s).String()
 	}
 
 	return fmt.Sprint(v)
+}
+
+type EnvString string
+
+func (e EnvString) IsEnv() bool {
+	return e[0] == '$'
+}
+
+func (e EnvString) String() string {
+	if e.IsEnv() {
+		return os.Getenv(string(e[1:]))
+	}
+	return string(e)
 }
