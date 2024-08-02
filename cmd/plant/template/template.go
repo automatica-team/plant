@@ -6,13 +6,10 @@ import (
 )
 
 var funcs = template.FuncMap{
-	"importmods": func(s string) string {
-		return strings.ReplaceAll(s, "/", "/mods/")
+	"import": func(s, what string) string {
+		return strings.ReplaceAll(s, "/", "/"+what+"/")
 	},
-	"importdeps": func(s string) string {
-		return strings.ReplaceAll(s, "/", "/deps/")
-	},
-	"modname": func(s string) string {
+	"basename": func(s string) string {
 		return s[strings.LastIndex(s, "/")+1:]
 	},
 }

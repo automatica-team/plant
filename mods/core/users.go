@@ -11,8 +11,8 @@ func (User) TableName() string {
 	return "users"
 }
 
-func (c *Core) userExists(id int64) bool {
+func (mod *Core) userExists(id int64) bool {
 	var count int64
-	c.db.Table("users").Where("id = ?", id).Count(&count)
+	mod.db.Table("users").Where("id = ?", id).Count(&count)
 	return count > 0
 }

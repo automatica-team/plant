@@ -1,0 +1,10 @@
+bot:
+  expose:
+    - /start
+
+deps:
+  - import: plant/test
+
+mods:
+  - import: plant/test
+

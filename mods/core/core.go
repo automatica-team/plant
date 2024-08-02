@@ -3,56 +3,45 @@ package core
 import (
 	"automatica.team/plant"
 	"automatica.team/plant/deps/db"
+
 	tele "gopkg.in/telebot.v3"
 )
 
-func (c *Core) Name() string {
+func (mod *Core) Name() string {
 	return "plant/core"
 }
 
-func New(b *plant.Bot, deps plant.Deps) *Core {
-	d, ok := deps["plant/db"].(*db.DB)
-	if !ok {
-		panic("plant/core: bad dependency (plant/db)")
-	}
-
-	return &Core{
-		b:  b,
-		db: d,
-	}
-}
-
 type Core struct {
-	b  *plant.Bot
-	db *db.DB
+	plant.Handler
+	b  *plant.Bot `plant:"bot"`
+	db *db.DB     `plant:"dep:plant/db"`
 }
 
-func (c *Core) Import(m plant.M) error {
-	lt := c.b.Layout
+func New() *Core {
+	return &Core{}
+}
 
-	// Register middlewares
-	c.b.Use(lt.Middleware("en"))
+func (mod *Core) Import(_ plant.M) error {
+	// Middlewares
+	mod.Use(mod.b.Layout.Middleware("en"))
+
+	// Handlers
+	mod.Handle("/start", mod.onStart)
 
 	// Auto migrate DB table
-	return c.db.AutoMigrate(&User{})
+	return mod.db.AutoMigrate(&User{})
 }
 
-func (c *Core) Handler(joint string) tele.HandlerFunc {
-	return map[string]tele.HandlerFunc{
-		"/start": c.onStart,
-	}[joint]
-}
-
-func (c *Core) onStart(ctx tele.Context) error {
-	user := &User{ID: ctx.Sender().ID}
-	if !c.userExists(user.ID) {
-		if err := c.db.Create(user).Error; err != nil {
+func (mod *Core) onStart(c tele.Context) error {
+	user := User{ID: c.Sender().ID}
+	if !mod.userExists(user.ID) {
+		if err := mod.db.Create(&user).Error; err != nil {
 			return err
 		}
 	}
 
-	return ctx.Send(
-		c.b.Text(ctx, "start"),
-		c.b.Markup(ctx, "start"),
+	return c.Send(
+		mod.b.Text(c, "start"),
+		mod.b.Markup(c, "start"),
 	)
 }
