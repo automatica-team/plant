@@ -44,7 +44,7 @@ func (m M) Name() string {
 func (m M) Get(name string) string {
 	v, ok := m[name]
 	if !ok {
-		panic(name)
+		return ""
 	}
 
 	if s, ok := v.(string); ok {
@@ -52,6 +52,14 @@ func (m M) Get(name string) string {
 	}
 
 	return fmt.Sprint(v)
+}
+
+func (m M) GetOr(name, def string) string {
+	v := m.Get(name)
+	if v == "" {
+		return def
+	}
+	return v
 }
 
 type EnvString string

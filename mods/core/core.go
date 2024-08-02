@@ -21,9 +21,15 @@ func New() *Core {
 	return &Core{}
 }
 
-func (mod *Core) Import(_ plant.M) error {
+func (mod *Core) Import(m plant.M) error {
+	lt := mod.b.Layout
+
+	var (
+		defLocale = m.GetOr("default_locale", "en")
+	)
+
 	// Middlewares
-	mod.Use(mod.b.Layout.Middleware("en"))
+	mod.Use(lt.Middleware(defLocale, mod.userLocale))
 
 	// Handlers
 	mod.Handle("/start", mod.onStart)
@@ -33,9 +39,13 @@ func (mod *Core) Import(_ plant.M) error {
 }
 
 func (mod *Core) onStart(c tele.Context) error {
-	user := User{ID: c.Sender().ID}
+	user := &User{
+		ID:   c.Sender().ID,
+		Lang: c.Sender().LanguageCode,
+	}
+
 	if !mod.userExists(user.ID) {
-		if err := mod.db.Create(&user).Error; err != nil {
+		if err := mod.db.Create(user).Error; err != nil {
 			return err
 		}
 	}

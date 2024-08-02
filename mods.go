@@ -44,9 +44,11 @@ func (p *Plant) injectMods(b *Bot) (err error) {
 			case tag == "bot":
 				uf.Set(reflect.ValueOf(b))
 			case strings.HasPrefix(tag, "dep:"):
-				dep, ok := p.deps[strings.TrimPrefix(tag, "dep:")]
+				name := strings.TrimPrefix(tag, "dep:")
+
+				dep, ok := p.deps[name]
 				if !ok {
-					continue
+					return fmt.Errorf("injectMods: (%s) dep not injected", name)
 				}
 
 				uf.Set(reflect.ValueOf(dep))
@@ -58,10 +60,6 @@ func (p *Plant) injectMods(b *Bot) (err error) {
 }
 
 func (p *Plant) importMods() error {
-	//if len(p.Mods) == 0 {
-	//	return errors.New("importMods: empty mods")
-	//}
-
 	for _, m := range p.Mods {
 		name := m.Name()
 

@@ -45,14 +45,14 @@ func Run(c *cobra.Command, args []string) error {
 		}
 	}()
 
-	fmt.Println("📝 Reading .env file")
+	fmt.Println("[📝] Reading .env file")
 	{
 		if err := godotenv.Load(dotEnvFile); err != nil {
 			return err
 		}
 	}
 
-	fmt.Println("⚙️ Generating main.gen.go")
+	fmt.Println("[⚙️] Generating main.gen.go")
 	{
 		var buf bytes.Buffer
 		if err := template.Run.ExecuteTemplate(&buf, "main.go", pl); err != nil {
@@ -67,7 +67,7 @@ func Run(c *cobra.Command, args []string) error {
 		}
 	}
 
-	fmt.Println("🤖 Generating bot.yml file")
+	fmt.Println("[🤖] Generating bot.yml file")
 	{
 		var buf bytes.Buffer
 		if err := template.Run.ExecuteTemplate(&buf, "bot.yml", pl); err != nil {
@@ -78,7 +78,7 @@ func Run(c *cobra.Command, args []string) error {
 		}
 	}
 
-	fmt.Println("📦 Generating go.mod file")
+	fmt.Println("[📦] Creating go.mod file")
 	{
 		if _, err := os.Stat(goModFile); errors.Is(err, os.ErrNotExist) {
 			modName := project
@@ -103,14 +103,14 @@ func Run(c *cobra.Command, args []string) error {
 		}
 	}
 
-	fmt.Println("📥 Downloading Go modules")
+	fmt.Println("[📥] Downloading Go modules")
 	{
 		if err := exec.Exec("go", "mod", "tidy"); err != nil {
 			return err
 		}
 	}
 
-	fmt.Println("🚀 Running the bot")
+	fmt.Println("[🚀] Running the bot")
 	{
 		cmd, err := exec.Command("go", "run", filepath.Base(mainGoFile))
 		if err != nil {
@@ -118,7 +118,6 @@ func Run(c *cobra.Command, args []string) error {
 		}
 
 		time.Sleep(time.Second)
-		fmt.Print("Press any key to exit...")
 		fmt.Scanln()
 
 		return cmd.Process.Kill()
