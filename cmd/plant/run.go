@@ -15,7 +15,13 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
+	"golang.org/x/mod/modfile"
 )
+
+type RunData struct {
+	*plant.Plant
+	ModName string
+}
 
 func Run(c *cobra.Command, args []string) error {
 	if len(args) != 1 {
@@ -26,24 +32,28 @@ func Run(c *cobra.Command, args []string) error {
 	exec.Cd(project)
 
 	var (
-		path       = filepath.Join(project, "plant.yml")
-		mainGoFile = filepath.Join(project, "main.gen.go")
-		botYmlFile = filepath.Join(project, "bot.yml")
+		configPath = filepath.Join(project, "plant.yml")
 		goModFile  = filepath.Join(project, "go.mod")
-		goSumFile  = filepath.Join(project, "go.sum")
+		botYmlFile = filepath.Join(project, "bot.yml")
+		mainGoFile = filepath.Join(project, "main.gen.go")
 		dotEnvFile = filepath.Join(project, ".env")
 	)
 
-	pl, err := plant.New(path)
+	pl, err := plant.New(configPath)
 	if err != nil {
 		return fmt.Errorf("failed to parse plant config: %w", err)
 	}
 
 	defer func() {
-		for _, path := range []string{mainGoFile, botYmlFile, goModFile, goSumFile} {
+		for _, path := range []string{mainGoFile, botYmlFile} {
 			os.Remove(path)
 		}
 	}()
+
+	run := RunData{
+		Plant:   pl,
+		ModName: project,
+	}
 
 	fmt.Println("[📝] Reading .env file")
 	{
@@ -52,10 +62,40 @@ func Run(c *cobra.Command, args []string) error {
 		}
 	}
 
+	fmt.Println("[📦] Creating go.mod file")
+	{
+		if _, err := os.Stat(goModFile); errors.Is(err, os.ErrNotExist) {
+			if run.ModName == "." {
+				wd, _ := os.Getwd()
+				run.ModName = filepath.Base(wd)
+			}
+
+			if err := exec.Exec("go", "mod", "init", run.ModName); err != nil {
+				return err
+			}
+
+			replace, _ := c.Flags().GetString("replace")
+			if replace == "" {
+				replace = "github.com/automatica-team/plant@latest"
+			}
+
+			replace = "automatica.team/plant=" + replace
+			if err := exec.ExecSilent("go", "mod", "edit", "-replace", replace); err != nil {
+				return err
+			}
+		} else {
+			data, err := os.ReadFile(goModFile)
+			if err != nil {
+				return err
+			}
+			run.ModName = modfile.ModulePath(data)
+		}
+	}
+
 	fmt.Println("[⚙️] Generating main.gen.go")
 	{
 		var buf bytes.Buffer
-		if err := template.Run.ExecuteTemplate(&buf, "main.go", pl); err != nil {
+		if err := template.Run.ExecuteTemplate(&buf, "main.go", run); err != nil {
 			return err
 		}
 		data, err := format.Source(buf.Bytes())
@@ -70,36 +110,11 @@ func Run(c *cobra.Command, args []string) error {
 	fmt.Println("[🤖] Generating bot.yml file")
 	{
 		var buf bytes.Buffer
-		if err := template.Run.ExecuteTemplate(&buf, "bot.yml", pl); err != nil {
+		if err := template.Run.ExecuteTemplate(&buf, "bot.yml", run); err != nil {
 			return err
 		}
 		if err := os.WriteFile(botYmlFile, buf.Bytes(), 0644); err != nil {
 			return err
-		}
-	}
-
-	fmt.Println("[📦] Creating go.mod file")
-	{
-		if _, err := os.Stat(goModFile); errors.Is(err, os.ErrNotExist) {
-			modName := project
-			if modName == "." {
-				wd, _ := os.Getwd()
-				modName = filepath.Base(wd)
-			}
-
-			if err := exec.Exec("go", "mod", "init", modName); err != nil {
-				return err
-			}
-
-			replace, _ := c.Flags().GetString("replace")
-			if replace == "" {
-				replace = "github.com/automatica-team/plant@latest"
-			}
-
-			replace = "automatica.team/plant=" + replace
-			if err := exec.ExecSilent("go", "mod", "edit", "-replace", replace); err != nil {
-				return err
-			}
 		}
 	}
 

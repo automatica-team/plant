@@ -3,8 +3,14 @@ package plant
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/spf13/viper"
+)
+
+const (
+	PrefixPlant   = "plant/"
+	PrefixPrivate = "x/"
 )
 
 type (
@@ -33,6 +39,15 @@ func Parse(path string) (c Config, _ error) {
 	}
 
 	return c, v.Unmarshal(&c)
+}
+
+func (c Config) OfPrefix(m []M, prefix string) (private []M) {
+	for _, mod := range m {
+		if strings.HasPrefix(mod.Name(), prefix) {
+			private = append(private, mod)
+		}
+	}
+	return private
 }
 
 type M map[string]any

@@ -1,6 +1,8 @@
 package template
 
-import "text/template"
+import (
+	"text/template"
+)
 
 var Run = func() *template.Template {
 	t := template.New("Run").Funcs(funcs)
@@ -18,11 +20,23 @@ import (
 
 import (
 	"automatica.team/plant"
-	{{- range .Mods }}
+
+	{{- range .OfPrefix .Deps "plant/" }}
+	"automatica.team/{{ import .Name "deps" }}"
+	{{- end }}
+
+	{{- range .OfPrefix .Mods "plant/" }}
 	"automatica.team/{{ import .Name "mods" }}"
 	{{- end }}
-	{{- range .Deps }}
-	"automatica.team/{{ import .Name "deps" }}"
+)
+
+import (
+	{{- range .OfPrefix .Deps "x/" }}
+	"{{ $.ModName }}/deps/{{ basename .Name }}"
+	{{- end }}
+
+	{{- range .OfPrefix .Mods "x/" }}
+	"{{ $.ModName }}/mods/{{ basename .Name }}"
 	{{- end }}
 )
 
