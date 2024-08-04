@@ -19,8 +19,10 @@ func main() {
 
 	cmd.AddCommand(version)
 	cmd.AddCommand(run)
+	cmd.AddCommand(build)
 
 	run.Flags().String("replace", "", "replace directive for go.mod")
+	build.Flags().StringP("tag", "t", "", "tag for the Docker image")
 
 	if err := cmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -39,8 +41,15 @@ var (
 		Run:   func(_ *cobra.Command, _ []string) { fmt.Println(Header) },
 	}
 	run = &cobra.Command{
-		Use:   "run [OPTIONS] PATH",
-		Short: "Create and run a new bot from a config",
-		RunE:  Run,
+		Use:     "run [OPTIONS] PATH",
+		Short:   "Create and run a new bot from a config",
+		Example: "plant run demo",
+		RunE:    Run,
+	}
+	build = &cobra.Command{
+		Use:     "build [OPTIONS] PATH",
+		Short:   "Builds a Docker image for the bot",
+		Example: "plant build -t ghcr.io/automatica-team/bots/demo demo",
+		RunE:    Build,
 	}
 )

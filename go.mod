@@ -8,7 +8,7 @@ require (
 	github.com/spf13/viper v1.13.0
 	github.com/stretchr/testify v1.8.1
 	golang.org/x/mod v0.19.0
-	gopkg.in/telebot.v3 v3.3.6
+	gopkg.in/telebot.v3 v3.3.7
 	gorm.io/driver/postgres v1.5.9
 	gorm.io/gorm v1.25.11
 )

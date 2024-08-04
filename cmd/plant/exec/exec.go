@@ -11,17 +11,12 @@ func Cd(v string) {
 	dir = v
 }
 
-func Exec(name string, arg ...string) error {
+func Run(name string, arg ...string) error {
 	return command(false, name, arg...).Run()
 }
 
-func ExecSilent(name string, arg ...string) error {
+func RunSilent(name string, arg ...string) error {
 	return command(true, name, arg...).Run()
-}
-
-func Command(name string, arg ...string) (*exec.Cmd, error) {
-	cmd := command(false, name, arg...)
-	return cmd, cmd.Start()
 }
 
 func command(silent bool, name string, arg ...string) *exec.Cmd {
