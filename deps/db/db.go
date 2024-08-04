@@ -5,6 +5,7 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 func (*DB) Name() string {
@@ -20,7 +21,11 @@ func New() *DB {
 }
 
 func (d *DB) Import(m plant.M) error {
-	db, err := gorm.Open(postgres.Open(m.Get("dsn")))
+	config := &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Error),
+	}
+
+	db, err := gorm.Open(postgres.Open(m.Get("dsn")), config)
 	if err != nil {
 		return err
 	}

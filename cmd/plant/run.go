@@ -7,7 +7,6 @@ import (
 	"go/format"
 	"os"
 	"path/filepath"
-	"time"
 
 	"automatica.team/plant"
 	"automatica.team/plant/cmd/plant/exec"
@@ -127,14 +126,6 @@ func Run(c *cobra.Command, args []string) error {
 
 	fmt.Println("[🚀] Running the bot")
 	{
-		cmd, err := exec.Command("go", "run", filepath.Base(mainGoFile))
-		if err != nil {
-			return err
-		}
-
-		time.Sleep(time.Second)
-		fmt.Scanln()
-
-		return cmd.Process.Kill()
+		return exec.Exec("go", "run", filepath.Base(mainGoFile))
 	}
 }

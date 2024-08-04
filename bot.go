@@ -63,7 +63,9 @@ func (h *Handler) Use(middle ...tele.MiddlewareFunc) {
 
 func (h *Handler) Handle(end any, handler tele.HandlerFunc, m ...tele.MiddlewareFunc) {
 	h.b.h[end] = append(h.b.h[end], handler)
-	h.b.m[end] = append(h.b.m[end], m...)
+	if len(m) > 0 {
+		h.b.m[end] = append(h.b.m[end], m...)
+	}
 }
 
 func (h *Handler) Expose() []string {
