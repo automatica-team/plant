@@ -33,14 +33,14 @@ func Run(c *cobra.Command, args []string) error {
 		return err
 	}
 
-	doData := do.Ctx{
+	ctx := do.Ctx{
 		Plant:   pl,
 		Project: project,
 		ModName: project,
 		Replace: replace,
 	}
 
-	purge, err := do.Base(doData)
+	purge, err := do.Base(ctx)
 	defer purge() // always before err check
 	if err != nil {
 		return err

@@ -20,8 +20,9 @@ func Build(c *cobra.Command, args []string) error {
 	exec.Cd(project)
 
 	var (
-		path   = filepath.Join(project, "plant.yml")
-		tag, _ = c.Flags().GetString("tag")
+		path        = filepath.Join(project, "plant.yml")
+		platform, _ = c.Flags().GetString("platform")
+		tag, _      = c.Flags().GetString("tag")
 	)
 
 	pl, err := plant.New(path)
@@ -29,13 +30,13 @@ func Build(c *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to parse plant config: %w", err)
 	}
 
-	doData := do.Ctx{
+	ctx := do.Ctx{
 		Plant:   pl,
 		Project: project,
 		ModName: project,
 	}
 
-	purge, err := do.Base(doData)
+	purge, err := do.Base(ctx)
 	defer purge() // purge always before err check
 	if err != nil {
 		return err
@@ -48,7 +49,7 @@ func Build(c *cobra.Command, args []string) error {
 	defer remove()
 
 	fmt.Println("[🐳] Building the Docker image")
-	if err := exec.Run("docker", buildDockerBuildArgs(tag)...); err != nil {
+	if err := exec.Run("docker", buildDockerBuildArgs(platform, tag)...); err != nil {
 		return err
 	}
 
@@ -60,10 +61,14 @@ func Build(c *cobra.Command, args []string) error {
 	return nil
 }
 
-func buildDockerBuildArgs(tag string) []string {
-	dockerBuildArgs := []string{"build"}
-	if tag != "" {
-		dockerBuildArgs = append(dockerBuildArgs, "-t", tag)
+func buildDockerBuildArgs(platform, tag string) (a []string) {
+	if platform != "" {
+		a = append(a, "buildx", "build", "--platform", platform)
+	} else {
+		a = append(a, "build")
 	}
-	return append(dockerBuildArgs, ".")
+	if tag != "" {
+		a = append(a, "-t", tag)
+	}
+	return append(a, ".")
 }

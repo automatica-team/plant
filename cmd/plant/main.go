@@ -23,6 +23,7 @@ func main() {
 
 	run.Flags().String("replace", "", "replace directive for go.mod")
 	build.Flags().StringP("tag", "t", "", "tag for the Docker image")
+	build.Flags().StringP("platform", "p", "", "platform for the Docker image")
 
 	if err := cmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
