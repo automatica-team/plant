@@ -22,7 +22,7 @@ func (mod *Core) userLocale(r tele.Recipient) (lang string) {
 		Table("users").
 		Select("lang").
 		Where("id = ?", r.Recipient()).
-		First(&lang).
+		Scan(&lang).
 		Error; err != nil {
 		return ""
 	}
