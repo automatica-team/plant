@@ -38,10 +38,14 @@ func (p *progressBar) WithPrefix(prefix string) *progressBar {
 }
 
 func (p *progressBar) Render() string {
-	repeat := int(math.Round(p.progress * float64(p.bars) / p.max))
+	if p.progress > p.max {
+		p.progress = p.max
+	}
 
-	bar := strings.Repeat("■", repeat)
-	bar += strings.Repeat("□", p.bars-repeat)
+	fill := int(math.Round(p.progress * float64(p.bars) / p.max))
+
+	bar := strings.Repeat("■", fill)
+	bar += strings.Repeat("□", p.bars-fill)
 
 	r := fmt.Sprintf("%s %s %s", p.prefix, bar, p.text)
 	return strings.TrimSpace(r)
