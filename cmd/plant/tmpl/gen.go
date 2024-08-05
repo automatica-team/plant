@@ -4,14 +4,14 @@ import (
 	"text/template"
 )
 
-var Run = func() *template.Template {
-	t := template.New("Run").Funcs(funcs)
-	t = template.Must(t.New("main.go").Parse(runMainGo))
-	t = template.Must(t.New("bot.yml").Parse(runBotYml))
+var Gen = func() *template.Template {
+	t := template.New("Gen").Funcs(funcs)
+	t = template.Must(t.New("main.go").Parse(genMainGo))
+	t = template.Must(t.New("bot.yml").Parse(genBotYml))
 	return t
 }()
 
-const runMainGo = "//" + genHeader + `
+const genMainGo = "//" + genHeader + `
 package main
 
 import (
@@ -68,8 +68,8 @@ func main() {
 }
 `
 
-const runBotYml = "#" + genHeader + `
+const genBotYml = "#" + genHeader + `
 settings:
-  token: {{ .Bot.Token.String }}
+  token_env: TOKEN
   parse_mode: html
 `

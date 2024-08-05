@@ -69,7 +69,7 @@ func MainGo(ctx Ctx) (func(), error) {
 	fmt.Println("[⚙️] Generating main.go")
 	{
 		var buf bytes.Buffer
-		if err := tmpl.Run.ExecuteTemplate(&buf, "main.go", ctx); err != nil {
+		if err := tmpl.Gen.ExecuteTemplate(&buf, "main.go", ctx); err != nil {
 			return nil, err
 		}
 		data, err := format.Source(buf.Bytes())
@@ -90,7 +90,7 @@ func BotYml(ctx Ctx) (func(), error) {
 	fmt.Println("[⚙️] Generating bot.yml")
 	{
 		var buf bytes.Buffer
-		if err := tmpl.Run.ExecuteTemplate(&buf, "bot.yml", ctx); err != nil {
+		if err := tmpl.Gen.ExecuteTemplate(&buf, "bot.yml", ctx); err != nil {
 			return nil, err
 		}
 		if err := os.WriteFile(path, buf.Bytes(), 0644); err != nil {
