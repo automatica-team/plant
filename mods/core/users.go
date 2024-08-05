@@ -1,6 +1,7 @@
 package core
 
 import (
+	"slices"
 	"time"
 
 	tele "gopkg.in/telebot.v3"
@@ -16,14 +17,18 @@ func (User) TableName() string {
 	return "users"
 }
 
-// TODO: handle db errors
-
 func (mod *Core) userLocale(r tele.Recipient) (lang string) {
-	mod.db.
+	if err := mod.db.
 		Table("users").
 		Select("lang").
 		Where("id = ?", r.Recipient()).
-		Find(&lang)
+		First(&lang).
+		Error; err != nil {
+		return ""
+	}
+	if !slices.Contains(mod.b.Locales(), lang) {
+		lang = ""
+	}
 	return lang
 }
 
