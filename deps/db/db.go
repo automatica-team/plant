@@ -20,9 +20,20 @@ func New() *DB {
 	return &DB{}
 }
 
+var logLevels = map[string]logger.LogLevel{
+	"silent": logger.Silent,
+	"error":  logger.Error,
+	"warn":   logger.Warn,
+	"info":   logger.Info,
+}
+
 func (d *DB) Import(m plant.M) error {
+	var (
+		logLevel = m.GetOr("log_level", "silent")
+	)
+
 	config := &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Error),
+		Logger: logger.Default.LogMode(logLevels[logLevel]),
 	}
 
 	db, err := gorm.Open(postgres.Open(m.Get("dsn")), config)
