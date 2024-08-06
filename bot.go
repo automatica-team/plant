@@ -2,8 +2,6 @@ package plant
 
 import (
 	"fmt"
-	"log"
-
 	tele "gopkg.in/telebot.v3"
 	"gopkg.in/telebot.v3/layout"
 )
@@ -57,10 +55,8 @@ func (b *Bot) handle(end string) {
 }
 
 func (b *Bot) Start() error {
-	for i, v := range b.c {
-		for j, f := range v {
-			//TODO: delete after test
-			log.Printf("Executed callback %s : %v", i, j)
+	for _, v := range b.c {
+		for _, f := range v {
 			f()
 		}
 	}
@@ -71,6 +67,8 @@ func (b *Bot) Start() error {
 type Handler struct {
 	b *Bot
 }
+
+const Startup = "\aStartup"
 
 func (h *Handler) On(cbName string, cbFunc func()) {
 	h.b.c[cbName] = append(h.b.c[cbName], cbFunc)
