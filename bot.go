@@ -55,10 +55,8 @@ func (b *Bot) handle(end string) {
 }
 
 func (b *Bot) Start() error {
-	for _, v := range b.c {
-		for _, f := range v {
-			f()
-		}
+	for _, v := range b.c[Startup] {
+		v()
 	}
 
 	return b.Start()
@@ -70,7 +68,7 @@ type Handler struct {
 
 const Startup = "\aStartup"
 
-func (h *Handler) On(cbName string, cbFunc func()) {
+func (h *Handler) On(cbName any, cbFunc func()) {
 	h.b.c[cbName] = append(h.b.c[cbName], cbFunc)
 }
 
