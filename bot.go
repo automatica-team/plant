@@ -2,6 +2,7 @@ package plant
 
 import (
 	"fmt"
+	"log"
 
 	tele "gopkg.in/telebot.v3"
 	"gopkg.in/telebot.v3/layout"
@@ -13,6 +14,7 @@ type Bot struct {
 
 	h map[any][]tele.HandlerFunc
 	m map[any][]tele.MiddlewareFunc
+	c map[any][]func()
 }
 
 func (p *Plant) composeBot() (*Bot, error) {
@@ -32,6 +34,7 @@ func (p *Plant) composeBot() (*Bot, error) {
 
 		h: make(map[any][]tele.HandlerFunc),
 		m: make(map[any][]tele.MiddlewareFunc),
+		c: make(map[any][]func()),
 	}, nil
 }
 
@@ -53,8 +56,24 @@ func (b *Bot) handle(end string) {
 	}, b.m[end]...)
 }
 
+func (b *Bot) Start() error {
+	for i, v := range b.c {
+		for j, f := range v {
+			//TODO: delete after test
+			log.Printf("Executed callback %s : %v", i, j)
+			f()
+		}
+	}
+
+	return b.Start()
+}
+
 type Handler struct {
 	b *Bot
+}
+
+func (h *Handler) On(cbName string, cbFunc func()) {
+	h.b.c[cbName] = append(h.b.c[cbName], cbFunc)
 }
 
 func (h *Handler) Use(middle ...tele.MiddlewareFunc) {
