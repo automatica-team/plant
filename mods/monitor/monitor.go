@@ -3,6 +3,7 @@ package monitor
 import (
 	"automatica.team/plant"
 	"github.com/go-telebot/pkg/monitor"
+	tele "gopkg.in/telebot.v3"
 )
 
 func (mod *Monitor) Name() string {
@@ -24,6 +25,14 @@ func (mod *Monitor) Import(m plant.M) error {
 		return err
 	}
 	mod.Use(mon.Middleware())
+	mod.Use(func(next tele.HandlerFunc) tele.HandlerFunc {
+		return func(c tele.Context) error {
+			if err := next(c); err != nil {
+				mon.Error(c, err.Error())
+			}
+			return nil
+		}
+	})
 
 	return nil
 }
