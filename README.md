@@ -1,11 +1,12 @@
-<h3>plant - automatic bot farm, create Telegram bot boilerplate</h3>
-<!-- Badges --!>
+# 🏭
+# plant - automatic bot farm, create Telegram bot boilerplate
 
-**Installation**:
-```shell
-go install automatica.team/plant/cmd/plant@latest
+# **Installation**:
+
+```sh
+$ go install automatica.team/plant/cmd/plant@latest
 ```
-**Example plant.yml file**
+## **Example plant.yml file**
 ```yml
 bot:
   token: $TOKEN # Token of your Telegram bot
@@ -21,7 +22,8 @@ mods:
   - import: plant/core # Importing core module
   - import: x/tracker # Importing private (x) module tracker
 ```
-**Usage**:
+## **Usage**:
+
 ```plant [OPTIONS] COMMAND [ARGS]```
 **Available commands**:
 ```
@@ -30,4 +32,4 @@ mods:
   run         Create and run a new bot from a config
   version     Print version and quit
 ```
-
+**Credits**:
