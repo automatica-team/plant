@@ -20,6 +20,7 @@ func main() {
 	cmd.AddCommand(version)
 	cmd.AddCommand(run)
 	cmd.AddCommand(build)
+	cmd.AddCommand(gen)
 
 	run.Flags().String("replace", "", "replace directive for go.mod")
 	build.Flags().StringP("tag", "t", "", "tag for the Docker image")
@@ -46,6 +47,12 @@ var (
 		Short:   "Create and run a new bot from a config",
 		Example: "plant run demo",
 		RunE:    Run,
+	}
+	gen = &cobra.Command{
+		Use:     "gen [OPTIONS] PATH",
+		Short:   "Create and generate boilerplate code",
+		Example: "plant gen demo",
+		RunE:    Gen,
 	}
 	build = &cobra.Command{
 		Use:     "build [OPTIONS] PATH",
