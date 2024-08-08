@@ -1,35 +1,26 @@
 # 🏭
-# plant - automatic bot farm, create Telegram bot boilerplate
+**Plant** is a declarative Telegram Bot builder built using [Telebot](https://github.com/tucnak/telebot).
 
-# **Installation**:
+## Quickstart
 
-```sh
+```bash
 $ go install automatica.team/plant/cmd/plant@latest
+$ plant init example
+$ plant run
 ```
-## **Example plant.yml file**
+
+## Config
 ```yml
 bot:
-  token: $TOKEN # Token of your Telegram bot
-  expose: # Handlers to use
+  expose:
     - /start
     - /t
 
 deps:
-  - import: plant/db # Importing database dependency
-    dsn: $DB_URL # DSN of your DataBase
+  - import: plant/db
+    dsn: $DB_URL
 
 mods:
-  - import: plant/core # Importing core module
-  - import: x/tracker # Importing private (x) module tracker
+  - import: plant/core
+  - import: x/private
 ```
-## **Usage**:
-
-```plant [OPTIONS] COMMAND [ARGS]```
-**Available commands**:
-```
-  build       Builds a Docker image for the bot
-  help        Help about any command
-  run         Create and run a new bot from a config
-  version     Print version and quit
-```
-**Credits**:
