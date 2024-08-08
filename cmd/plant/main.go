@@ -7,10 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	Version = "0.1"
-	Header  = "🤖 Plant v" + Version
-)
+const Header = "🤖 Plant " + verPlant
 
 func main() {
 	cmd.SilenceUsage = true
@@ -40,7 +37,7 @@ var (
 	version = &cobra.Command{
 		Use:   "version",
 		Short: "Print version and quit",
-		Run:   func(_ *cobra.Command, _ []string) { fmt.Println(Header) },
+		RunE:  Version,
 	}
 	run = &cobra.Command{
 		Use:     "run [OPTIONS] PATH",

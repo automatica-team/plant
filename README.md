@@ -14,7 +14,6 @@ $ plant run
 bot:
   expose:
     - /start
-    - /t
 
 deps:
   - import: plant/db

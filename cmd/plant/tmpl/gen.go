@@ -71,5 +71,5 @@ func main() {
 const genBotYml = "#" + genHeader + `
 settings:
   token_env: TOKEN
-  parse_mode: html
+  parse_mode: HTML
 `
