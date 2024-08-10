@@ -29,6 +29,7 @@ func (mod *Core) Import(m plant.M) error {
 	)
 
 	// Middlewares
+	mod.Use(mod.Logger(m))
 	mod.Use(lt.Middleware(defLocale, mod.userLocale))
 
 	// Handlers
