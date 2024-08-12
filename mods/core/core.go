@@ -3,8 +3,6 @@ package core
 import (
 	"automatica.team/plant"
 	"automatica.team/plant/deps/db"
-
-	tele "gopkg.in/telebot.v3"
 )
 
 func (mod *Core) Name() string {
@@ -21,12 +19,14 @@ func New() *Core {
 	return &Core{}
 }
 
-func (mod *Core) Import(m plant.M) error {
-	lt := mod.b.Layout
+func (mod *Core) Import(v plant.V) error {
+	v.SetDefault("default_locale", "en")
 
 	var (
-		defLocale = m.GetOr("default_locale", "en")
+		defLocale = v.GetString("default_locale")
 	)
+
+	lt := mod.b.Layout
 
 	// Middlewares
 	mod.Use(mod.Logger(m))
@@ -37,22 +37,4 @@ func (mod *Core) Import(m plant.M) error {
 
 	// Auto migrate DB table
 	return mod.db.AutoMigrate(&User{})
-}
-
-func (mod *Core) onStart(c tele.Context) error {
-	user := &User{
-		ID:   c.Sender().ID,
-		Lang: c.Sender().LanguageCode,
-	}
-
-	if !mod.userExists(user.ID) {
-		if err := mod.db.Create(user).Error; err != nil {
-			return err
-		}
-	}
-
-	return c.Send(
-		mod.b.Text(c, "start"),
-		mod.b.Markup(c, "start"),
-	)
 }

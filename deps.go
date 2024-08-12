@@ -6,7 +6,7 @@ import (
 
 type Dep interface {
 	Name() string
-	Import(M) error
+	Import(V) error
 }
 
 func (p *Plant) Inject(d Dep) {
@@ -22,7 +22,7 @@ func (p *Plant) importDeps() error {
 			return fmt.Errorf("importDeps: dep %s not injected", name)
 		}
 
-		if err := dep.Import(m); err != nil {
+		if err := dep.Import(p.Config.V(m)); err != nil {
 			return fmt.Errorf("importDeps: (%s) %w", name, err)
 		}
 	}

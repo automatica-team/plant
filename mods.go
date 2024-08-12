@@ -12,7 +12,7 @@ import (
 type Mod interface {
 	Name() string
 	Expose() []string
-	Import(M) error
+	Import(V) error
 }
 
 func (p *Plant) Add(mod Mod) {
@@ -68,7 +68,7 @@ func (p *Plant) importMods() error {
 			return errors.New("importMods: mod not added")
 		}
 
-		if err := mod.Import(m); err != nil {
+		if err := mod.Import(p.Config.V(m)); err != nil {
 			return fmt.Errorf("importMods: (%s) %w", name, err)
 		}
 	}

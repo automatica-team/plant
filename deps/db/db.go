@@ -27,16 +27,19 @@ var logLevels = map[string]logger.LogLevel{
 	"info":   logger.Info,
 }
 
-func (d *DB) Import(m plant.M) error {
+func (d *DB) Import(v plant.V) error {
+	v.SetDefault("log_level", "silent")
+
 	var (
-		logLevel = m.GetOr("log_level", "silent")
+		logLevel = v.GetString("log_level")
+		dsn      = v.GetEnv("dsn")
 	)
 
 	config := &gorm.Config{
 		Logger: logger.Default.LogMode(logLevels[logLevel]),
 	}
 
-	db, err := gorm.Open(postgres.Open(m.Get("dsn")), config)
+	db, err := gorm.Open(postgres.Open(dsn), config)
 	if err != nil {
 		return err
 	}

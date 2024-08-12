@@ -7,10 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	Version = "0.1"
-	Header  = "🤖 Plant v" + Version
-)
+const Header = "🤖 Plant " + verPlant
 
 func main() {
 	cmd.SilenceUsage = true
@@ -20,6 +17,7 @@ func main() {
 	cmd.AddCommand(version)
 	cmd.AddCommand(run)
 	cmd.AddCommand(build)
+	cmd.AddCommand(gen)
 
 	run.Flags().String("replace", "", "replace directive for go.mod")
 	build.Flags().StringP("tag", "t", "", "tag for the Docker image")
@@ -39,13 +37,19 @@ var (
 	version = &cobra.Command{
 		Use:   "version",
 		Short: "Print version and quit",
-		Run:   func(_ *cobra.Command, _ []string) { fmt.Println(Header) },
+		RunE:  Version,
 	}
 	run = &cobra.Command{
 		Use:     "run [OPTIONS] PATH",
 		Short:   "Create and run a new bot from a config",
 		Example: "plant run demo",
 		RunE:    Run,
+	}
+	gen = &cobra.Command{
+		Use:     "gen [OPTIONS] PATH",
+		Short:   "Create and generate boilerplate code",
+		Example: "plant gen demo",
+		RunE:    Gen,
 	}
 	build = &cobra.Command{
 		Use:     "build [OPTIONS] PATH",
