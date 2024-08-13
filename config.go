@@ -20,8 +20,7 @@ type (
 	}
 
 	ConfigBot struct {
-		File   string   `yaml:"file"`
-		Expose []string `yaml:"expose"`
+		File string `yaml:"file"`
 	}
 )
 

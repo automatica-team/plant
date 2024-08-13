@@ -11,7 +11,7 @@ import (
 
 type Mod interface {
 	Name() string
-	Expose() []string
+	Expose() []any
 	Import(V) error
 }
 

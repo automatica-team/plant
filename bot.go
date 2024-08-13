@@ -3,6 +3,7 @@ package plant
 import (
 	"fmt"
 
+	"golang.org/x/exp/maps"
 	tele "gopkg.in/telebot.v3"
 	"gopkg.in/telebot.v3/layout"
 )
@@ -38,13 +39,20 @@ func (p *Plant) composeBot() (*Bot, error) {
 }
 
 func (p *Plant) exposeBot(b *Bot) error {
-	for _, end := range p.Bot.Expose {
-		b.handle(end)
+	for _, mod := range p.mods {
+		for _, end := range mod.Expose() {
+			b.handle(end)
+		}
 	}
 	return nil
 }
 
-func (b *Bot) handle(end string) {
+func (b *Bot) Start() {
+	b.callOn(Startup)
+	b.Bot.Start()
+}
+
+func (b *Bot) handle(end any) {
 	b.Handle(end, func(c tele.Context) error {
 		for _, h := range b.h[end] {
 			if err := h(c); err != nil {
@@ -55,18 +63,16 @@ func (b *Bot) handle(end string) {
 	}, b.m[end]...)
 }
 
-func (b *Bot) Start() error {
-	for _, v := range b.c[Startup] {
-		v()
+func (b *Bot) callOn(on On) {
+	for _, do := range b.c[on] {
+		do()
 	}
-
-	return b.Start()
 }
 
 type On = string
 
 const (
-	Startup On = "Startup"
+	Startup On = "plant:startup"
 )
 
 type Handler struct {
@@ -88,6 +94,6 @@ func (h *Handler) Handle(end any, handler tele.HandlerFunc, m ...tele.Middleware
 	}
 }
 
-func (h *Handler) Expose() []string {
-	return nil
+func (h *Handler) Expose() []any {
+	return maps.Keys(h.b.h)
 }
