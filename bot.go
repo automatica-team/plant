@@ -13,6 +13,7 @@ type Bot struct {
 
 	h map[any][]tele.HandlerFunc
 	m map[any][]tele.MiddlewareFunc
+	c map[any][]func()
 }
 
 func (p *Plant) composeBot() (*Bot, error) {
@@ -32,6 +33,7 @@ func (p *Plant) composeBot() (*Bot, error) {
 
 		h: make(map[any][]tele.HandlerFunc),
 		m: make(map[any][]tele.MiddlewareFunc),
+		c: make(map[any][]func()),
 	}, nil
 }
 
@@ -53,8 +55,26 @@ func (b *Bot) handle(end string) {
 	}, b.m[end]...)
 }
 
+func (b *Bot) Start() error {
+	for _, v := range b.c[Startup] {
+		v()
+	}
+
+	return b.Start()
+}
+
+type On = string
+
+const (
+	Startup On = "Startup"
+)
+
 type Handler struct {
 	b *Bot
+}
+
+func (h *Handler) On(on On, do func()) {
+	h.b.c[on] = append(h.b.c[on], do)
 }
 
 func (h *Handler) Use(middle ...tele.MiddlewareFunc) {
