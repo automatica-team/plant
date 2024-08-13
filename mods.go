@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
-	"slices"
 	"strings"
 	"unsafe"
 )
@@ -74,14 +73,4 @@ func (p *Plant) importMods() error {
 	}
 
 	return nil
-}
-
-func (p *Plant) filterMods(end string) []Mod {
-	var mods []Mod
-	for _, m := range p.mods {
-		if slices.Contains(m.Expose(), end) {
-			mods = append(mods, m)
-		}
-	}
-	return mods
 }
