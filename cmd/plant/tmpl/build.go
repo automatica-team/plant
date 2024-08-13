@@ -9,7 +9,7 @@ var Build = func() *template.Template {
 }()
 
 const buildDockerfile = "#" + genHeader + `
-FROM golang:alpine as builder
+FROM golang:alpine AS builder
 
 WORKDIR /src
 
