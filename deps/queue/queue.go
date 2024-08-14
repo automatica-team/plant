@@ -15,11 +15,13 @@ type Queue struct {
 }
 
 func New() *Queue {
-	return &Queue{}
+
+	return &Queue{queue.NewPool(10)}
 }
 
-func (q *Queue) Import(m plant.M) error {
-	q.Queue = queue.NewPool(m["size"].(int))
+func (q *Queue) Import(v plant.V) error {
+	v.SetDefault("size", 10)
+
 	return nil
 }
 

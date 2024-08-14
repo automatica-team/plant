@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"os"
 
+	"automatica.team/plant/cmd/constants"
 	"github.com/spf13/cobra"
 )
 
-const Header = "🤖 Plant " + verPlant
+const Header = "🤖 Plant " + constants.VerPlant
 
 func main() {
 	cmd.SilenceUsage = true
