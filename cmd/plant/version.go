@@ -5,12 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"automatica.team/plant/cmd/constants"
 	"github.com/spf13/cobra"
-)
-
-const (
-	verPlant   = "v0.1"
-	verTelebot = "v3.3.8"
 )
 
 func Version(c *cobra.Command, _ []string) error {
@@ -21,7 +17,7 @@ func Version(c *cobra.Command, _ []string) error {
 		return err
 	}
 
-	latestPlant := verPlant
+	latestPlant := constants.VerPlant
 	if len(tagsPlant) > 0 {
 		latestPlant = tagsPlant[0]
 	}
@@ -31,12 +27,12 @@ func Version(c *cobra.Command, _ []string) error {
 		return err
 	}
 
-	latestTelebot := verTelebot
+	latestTelebot := constants.VerTelebot
 	if len(tagsTelebot) > 1 {
 		latestTelebot = tagsTelebot[1]
 	}
 
-	fmt.Printf("Current version:\n  Plant:   %s\n  Telebot: %s\n\n", verPlant, verTelebot)
+	fmt.Printf("Current version:\n  Plant:   %s\n  Telebot: %s\n\n", constants.VerPlant, constants.VerTelebot)
 	fmt.Printf("Latest version:\n  Plant:   %s\n  Telebot: %s\n\n", latestPlant, latestTelebot)
 	fmt.Println(`Use "plant upgrade" to upgrade to the latest version.`)
 

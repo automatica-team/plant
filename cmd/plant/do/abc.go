@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"automatica.team/plant"
+	"automatica.team/plant/cmd/constants"
 	"github.com/joho/godotenv"
 )
 
@@ -24,6 +25,11 @@ func Base(ctx Ctx) (func(), error) { // nil-safe
 	}
 
 	ctx.ModName = modName
+
+	err = Get("gopkg.in/telebot.v3@" + constants.VerTelebot)
+	if err != nil {
+		return nil, err
+	}
 
 	remove1, err := MainGo(ctx)
 	if err != nil {

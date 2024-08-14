@@ -4,10 +4,11 @@ go 1.22.1
 
 require (
 	github.com/go-telebot/pkg v0.0.0-20240609163258-17c37444f19a
+	github.com/golang-queue/queue v0.2.0
 	github.com/joho/godotenv v1.5.1
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.13.0
-	github.com/stretchr/testify v1.8.1
+	github.com/stretchr/testify v1.8.4
 	golang.org/x/exp v0.0.0-20240808152545-0cdaa3abc0fa
 	golang.org/x/mod v0.20.0
 	gopkg.in/telebot.v3 v3.3.7
@@ -29,6 +30,7 @@ require (
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/jpillora/backoff v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mailru/go-clickhouse v1.6.0 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
