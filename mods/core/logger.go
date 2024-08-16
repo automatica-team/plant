@@ -4,20 +4,17 @@ import (
 	"log/slog"
 	"os"
 
-	"automatica.team/plant"
 	"github.com/go-telebot/pkg/monitor"
 	"github.com/mitchellh/mapstructure"
 	tele "gopkg.in/telebot.v3"
 )
 
-func (mod *Core) Logger(m plant.M) tele.MiddlewareFunc {
+func (mod *Core) Logger() tele.MiddlewareFunc {
 	handler := slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
-		AddSource: true,
-		Level:     slog.LevelDebug,
+		Level: slog.LevelDebug,
 	})
 
 	logger := slog.New(handler)
-
 	return func(next tele.HandlerFunc) tele.HandlerFunc {
 		return func(c tele.Context) error {
 			if update, ok := monitor.NewUpdate(c); ok {
@@ -35,6 +32,8 @@ func (mod *Core) Logger(m plant.M) tele.MiddlewareFunc {
 
 				if err := dec.Decode(update); err == nil {
 					delete(fields, "text")
+					delete(fields, "time")
+					delete(fields, "date")
 
 					var args []any
 					for k, v := range fields {

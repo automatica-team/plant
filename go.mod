@@ -3,7 +3,7 @@ module automatica.team/plant
 go 1.22.1
 
 require (
-	github.com/go-telebot/pkg v0.0.0-20240806113424-5c132e456b6f
+	github.com/go-telebot/pkg v0.0.0-20240813000808-3ae0e1ec6485
 	github.com/joho/godotenv v1.5.1
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/spf13/cobra v1.8.1
