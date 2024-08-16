@@ -3,8 +3,9 @@ module automatica.team/plant
 go 1.22.1
 
 require (
-	github.com/go-telebot/pkg v0.0.0-20240609163258-17c37444f19a
+	github.com/go-telebot/pkg v0.0.0-20240813000808-3ae0e1ec6485
 	github.com/joho/godotenv v1.5.1
+	github.com/mitchellh/mapstructure v1.5.0
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.13.0
 	github.com/stretchr/testify v1.8.1
@@ -33,7 +34,6 @@ require (
 	github.com/mailru/go-clickhouse v1.6.0 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
-	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.5 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect

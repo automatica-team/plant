@@ -136,8 +136,10 @@ github.com/go-playground/universal-translator v0.17.0/go.mod h1:UkSxE5sNxxRwHyU+
 github.com/go-playground/validator/v10 v10.4.1 h1:pH2c5ADXtd66mxoE0Zm9SUhxE20r7aM3F26W0hOn+GE=
 github.com/go-playground/validator/v10 v10.4.1/go.mod h1:nlOn6nFhuKACm19sB/8EGNn9GlaMV7XkbRSipzJ0Ii4=
 github.com/go-stack/stack v1.8.0/go.mod h1:v0f6uXyyMGvRgIKkXu+yp6POWl0qKG85gN/melR3HDY=
-github.com/go-telebot/pkg v0.0.0-20240609163258-17c37444f19a h1:AL8NkRfXrB4ZabnW9WefkYPd0i4692grDeNms4CJkrM=
-github.com/go-telebot/pkg v0.0.0-20240609163258-17c37444f19a/go.mod h1:PexvXF/EAoQ8Ax8ZhBZU8FI8FrWdYKc8KZub9ACOfak=
+github.com/go-telebot/pkg v0.0.0-20240806113424-5c132e456b6f h1:rWvP/d3UwvRwmqhFSnCEyQoFy7RZV0OYwUKpFtT41VU=
+github.com/go-telebot/pkg v0.0.0-20240806113424-5c132e456b6f/go.mod h1:PexvXF/EAoQ8Ax8ZhBZU8FI8FrWdYKc8KZub9ACOfak=
+github.com/go-telebot/pkg v0.0.0-20240813000808-3ae0e1ec6485 h1:67N3myOsvKJsZ8eDYznREJ0ShAXnw79USAWI+KkX2ew=
+github.com/go-telebot/pkg v0.0.0-20240813000808-3ae0e1ec6485/go.mod h1:PexvXF/EAoQ8Ax8ZhBZU8FI8FrWdYKc8KZub9ACOfak=
 github.com/goccy/go-yaml v1.9.5 h1:Eh/+3uk9kLxG4koCX6lRMAPS1OaMSAi+FJcya0INdB0=
 github.com/goccy/go-yaml v1.9.5/go.mod h1:U/jl18uSupI5rdI2jmuCswEA2htH9eXfferR3KfscvA=
 github.com/godbus/dbus/v5 v5.0.4/go.mod h1:xhWf0FNVPg57R7Z0UbKHbJfkEywrmjJnf7w5xrFpKfA=

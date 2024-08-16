@@ -29,6 +29,7 @@ func (mod *Core) Import(v plant.V) error {
 	lt := mod.b.Layout
 
 	// Middlewares
+	mod.Use(mod.Logger(m))
 	mod.Use(lt.Middleware(defLocale, mod.userLocale))
 
 	// Handlers
