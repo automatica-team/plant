@@ -3,6 +3,7 @@ package core
 import (
 	"automatica.team/plant"
 	"automatica.team/plant/deps/db"
+	tele "gopkg.in/telebot.v3"
 )
 
 func (mod *Core) Name() string {
@@ -34,6 +35,8 @@ func (mod *Core) Import(v plant.V) error {
 
 	// Handlers
 	mod.Handle("/start", mod.onStart)
+	mod.Handle("/lang", mod.onLanguage)
+	mod.Handle(tele.OnCallback, mod.onSetLanguage)
 
 	// Auto migrate DB table
 	return mod.db.AutoMigrate(&User{})
